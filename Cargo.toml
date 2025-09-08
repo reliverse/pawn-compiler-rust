@@ -1,0 +1,25 @@
+[package]
+name = "pawn-compiler-rust"
+version = "0.1.0"
+edition = "2024"
+authors = ["Pawn Community Compiler Team"]
+description = "A Rust rewrite of the Pawn compiler"
+license = "MIT"
+repository = "https://github.com/pawn-community/pawn-compiler-rust"
+
+[[bin]]
+name = "pawnc"
+path = "crates/pawn-cli/src/main.rs"
+
+[workspace]
+members = [
+    "crates/pawn-compiler",
+    "crates/pawn-amx",
+    "crates/pawn-cli"
+]
+
+[dependencies]
+pawn-compiler = { path = "crates/pawn-compiler" }
+pawn-amx = { path = "crates/pawn-amx" }
+clap = "4.5.47"
+regex = "1.11.2"

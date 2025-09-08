@@ -1,0 +1,90 @@
+{
+    "extends": [
+        "default"
+    ],
+    "vcs": {
+        "enabled": false,
+        "clientKind": "git",
+        "useIgnoreFile": true
+    },
+    "files": {
+        "ignoreUnknown": false,
+        "includes": [
+            "**/*.{p,pwn,inc}",
+            "!**/node_modules",
+            "!**/dist",
+            "!**/dist-*",
+            "!**/target"
+        ]
+    },
+    "formatter": {
+        "enabled": true,
+        "indentStyle": "space",
+        "lineWidth": 100,
+        "trimTrailingWhitespace": true,
+        "insertFinalNewline": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "suspicious": {
+                "unusedVariable": "warn",
+                "duplicateInclude": "error"
+            },
+            "style": {
+                "addMissingBraces": "off",
+                "consistentIndent": "warn",
+                "noTrailingWhitespace": "error",
+                "newlineAtEndOfFile": "warn"
+            },
+            "complexity": {
+                "maxFunctionLength": {
+                    "level": "off",
+                    "max": 200
+                }
+            },
+            "correctness": {
+                "noUnreachableCode": "warn",
+                "noRedundantSemicolons": "off"
+            },
+            "performance": {
+                "preferConstForLiterals": "off"
+            },
+            "nursery": {
+                "preferEarlyReturn": "off"
+            }
+        }
+    },
+    "pawn": {
+        "globals": [
+            "printf",
+            "format",
+            "random"
+        ],
+        "formatter": {
+            "alignAssignments": false,
+            "spaceAroundOperators": true,
+            "spaceInsideParens": false,
+            "collapseEmptyBlocks": true
+        }
+    },
+    "overrides": [
+        {
+            "files": [
+                "**/*.inc"
+            ],
+            "formatter": {
+                "lineWidth": 120
+            }
+        }
+    ],
+    "assist": {
+        "enabled": true,
+        "actions": {
+            "source": {
+                "organizeIncludes": "on"
+            }
+        }
+    }
+}

@@ -1,0 +1,10 @@
+[package]
+name = "pawn-amx"
+version = "0.1.0"
+edition = "2024"
+description = "AMX (Abstract Machine eXecutor) runtime for Pawn"
+
+[dependencies]
+thiserror = "1.0"
+anyhow = "1.0"
+log = "0.4"

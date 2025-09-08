@@ -1,0 +1,15 @@
+[package]
+name = "pawn-compiler"
+version = "0.1.0"
+edition = "2024"
+description = "Core Pawn compiler implementation"
+
+[dependencies]
+pawn-amx = { path = "../pawn-amx" }
+thiserror = "1.0"
+anyhow = "1.0"
+log = "0.4"
+env_logger = "0.10"
+nom = "7.1"
+regex = "1.10"
+indexmap = "2.0"

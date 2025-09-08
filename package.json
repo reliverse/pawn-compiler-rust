@@ -1,0 +1,16 @@
+{
+  "name": "pawn-compiler-rust",
+  "module": "scripts/mod.ts",
+  "type": "module",
+  "scripts": {
+    "build": "cargo build",
+    "tests": "bun scripts/commands/test-examples.ts",
+    "rustpwn": "cargo run --quiet --bin pawnc --",
+    "check": "bun rustpwn --check",
+    "fix": "bun rustpwn --fix"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.21",
+    "typescript": "^5.9.2"
+  }
+}

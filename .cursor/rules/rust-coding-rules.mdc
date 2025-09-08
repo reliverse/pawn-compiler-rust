@@ -1,0 +1,128 @@
+---
+globs: *.rs
+alwaysApply: false
+---
+# General Coding Rules with Rust
+
+- Use `cargo` for building, testing, benchmarking, and running tools.
+- Prefer stable Rust; avoid nightly unless strictly required and documented.
+- Enforce formatting with `rustfmt` (use the repository `rustfmt.toml` if present).
+- Lint with `clippy` and keep it warning-free (`cargo clippy --all-targets --all-features -D warnings`).
+- Target the current stable edition; prefer `edition = "2024"` (or newer when adopted across the repo).
+- Keep dependencies minimal and well-justified; prefer standard library and small focused crates.
+- Document public APIs with Rustdoc comments (`///`); add examples that compile with `doc` tests.
+- Avoid `unsafe` code. If unavoidable, encapsulate it, add invariants, and document safety contracts.
+- Avoid `unwrap`, `expect`, and panics in library code. Use `Result`/`Option` and propagate errors.
+- In binaries, panics are acceptable only for truly unrecoverable states; prefer graceful error messages.
+- Use `thiserror` for library error types and `anyhow` for application-level error handling.
+- Avoid global mutable state. Prefer dependency injection and explicit parameter passing.
+- Prefer borrowing over cloning; do not clone unless necessary. Justify expensive `clone()` calls.
+- Prefer iterators and combinators over indexed loops; avoid manual indexing when possible.
+- Use `match` exhaustively; avoid `if let` chains when a `match` is clearer and total.
+- Prefer early returns and guard clauses; avoid deep nesting.
+- Use `Cow`, `Arc`, and `Rc` deliberately; understand ownership and lifetimes before choosing.
+- Derive common traits (`Debug`, `Clone`, `Eq`, `PartialEq`, `Ord`, `Hash`, `Default`) when they make sense.
+- Implement `Display` for user-facing messages; reserve `Debug` for developer-facing output.
+- Prefer `From`/`Into`/`TryFrom`/`TryInto` for type conversions over ad-hoc constructors.
+- Use `AsRef`/`AsMut` for generic borrowing APIs where appropriate.
+- Keep module trees shallow and cohesive. Prefer `mod.rs`-less inline modules per edition idioms.
+- Keep files and modules small and focused; split when they grow beyond a clear responsibility.
+- Use meaningful names: functions are verbs, types are nouns; avoid abbreviations.
+- Avoid macros for regular control flow; prefer functions and generics. If macros are used, document hygiene and examples.
+- Avoid `Box<dyn Trait>` unless dynamic dispatch is intended; prefer generics for zero-cost abstraction.
+- Prefer `#[non_exhaustive]` for public enums/structs that may evolve.
+- Use `#[must_use]` on functions/types where ignoring the result is almost always a bug.
+- Avoid exposing `pub` fields unless a plain data bag is intended; prefer getters/builders for invariants.
+- Keep constructors small; prefer builder patterns for complex initialization.
+- Validate inputs at boundaries; prefer strong types to represent validated data.
+- Avoid `String` when `&str` or `Cow<str>` suffices; avoid `Vec<T>` when slices `&[T]` suffice.
+- Use `Option` instead of sentinel values; avoid `None` meaning "error".
+- Do not use `Default` as a placeholder for meaningful configuration without documenting semantics.
+- Prefer `SmallVec`, `arrayvec`, or similar only when profiling shows benefit; justify such choices.
+- Do not block async executors with synchronous, long-running work; offload to blocking tasks.
+- In async code, prefer `tokio::spawn_blocking`/`spawn` appropriately; avoid holding locks across `.await`.
+- Use `tracing` for structured logs; add spans to critical paths. Avoid `println!` in libraries.
+- Use `#[cfg(...)]` and features to keep optional dependencies truly optional.
+- Keep feature flags additive and clearly documented; avoid feature combinations that break semantics.
+- Prefer returning `impl Trait` from functions when it hides types without harming ergonomics.
+- Avoid `&mut` aliasing; minimize mutable borrows' scope and lifetime.
+- Prefer `let`-bindings with explicit types at API boundaries or complex generic code.
+- Do not ignore `Result`s; use `?` or handle explicitly. Do not `let _ = ...` to drop errors.
+- Avoid needless `return`; prefer expression-based returns.
+- Prefer `if`/`match` over boolean flags toggling behavior far from their use.
+- Keep `unsafe` blocks as small as possible with comments explaining invariants.
+- For FFI, encapsulate raw pointers, validate lifetimes, and provide safe wrappers.
+- Prefer `VecDeque` for queues, `BTreeMap`/`HashMap` per workload; justify `IndexMap`/`FxHash*` with profiling.
+- Use `rayon` or scoped threads for parallelism in CPU-bound code; avoid ad-hoc threading.
+- Avoid unnecessary allocations; use `with_capacity` when capacity is known.
+- Use `map_or`, `map_or_else`, `unwrap_or`, `unwrap_or_else` appropriately; avoid double work in default closures.
+- Use `matches!` for pattern checks and `let-else` for early exits where it improves clarity.
+- Prefer `slice::chunks_exact`/`array_chunks` when chunking with fixed sizes.
+- Validate `unsafe` `mem::transmute` alternatives first (`from_ne_bytes`, `bytemuck`, `ptr::cast`).
+- Do not use `static mut`; prefer `OnceLock`, `LazyLock`, or `lazy_static` as last resort.
+- Avoid leaking `pub use` re-exports that create import cycles; keep API surfaces intentional.
+- Keep `serde` derives behind a feature when not universally needed.
+- Use `time`/`chrono` carefully; be explicit about timezones and monotonic vs wall-clock time.
+- Prefer `Duration` arithmetic using checked ops; avoid integer millisecond math.
+- Avoid magic numbers; use `const`/`static` with descriptive names.
+- Prefer `enum` over booleans or stringly-typed states.
+- Use exhaustive `match` with `#[deny(non_exhaustive_omitted_patterns)]` when appropriate.
+- Prefer `#[derive(Default)]` and field init shorthand; avoid `..Default::default()` hiding missing fields in builders.
+- Do not shadow imports or names that reduce clarity; keep imports explicit.
+- Group `use` statements logically; avoid glob imports (`*`) in libraries.
+- Keep crate roots free of heavy logic; place code in modules and keep `lib.rs`/`main.rs` tidy.
+- For CLI apps, validate inputs and surface friendly errors; use `clap`/`argh` as needed.
+- Keep tests close to code (`#[cfg(test)] mod tests`) and add integration tests in `tests/`.
+- Make tests deterministic; avoid timing and random flakiness. Seed RNGs when needed.
+- Use property tests (`proptest`/`quickcheck`) for complex invariants where beneficial.
+- Benchmark with `criterion` when performance matters; check regressions in CI when feasible.
+- Avoid exposing timestamps and nondeterminism in debug output that breaks snapshot tests.
+- Ensure `Send`/`Sync` bounds are correct for types used across threads.
+- Prefer `Rc` in single-threaded code; use `Arc` only when sharing across threads or tasks.
+- Avoid holding locks while performing I/O or awaiting.
+- Prefer `parking_lot` only if contention profiling indicates benefit.
+- Use `#[inline]` sparingly; trust the optimizer unless profiling dictates otherwise.
+- Avoid `ref` bindings in patterns unless needed; prefer `&` patterns.
+- Prefer `copy` types for small, trivially copyable data; implement `Copy` only when semantics are correct.
+- Avoid `Box` in return positions unless it simplifies recursion or type sizes meaningfully.
+- Use `no_std` only with clear requirements; document assumptions and platform constraints.
+- Respect platform differences (endianness, pointer width); avoid assumptions in serialization and FFI.
+- Validate parsing with clear error messages and positions; avoid partial parses without signaling.
+- Keep CI green: build, test, lint across all supported targets/features.
+- Do not rely on undefined behavior or unspecified Rust semantics.
+- Prefer `NonZero*` types to optimize `Option` layout where appropriate.
+- Use `Result<T, E>` with specific error types in libraries; avoid `Result<T, Box<dyn Error>>` unless layering.
+- Prefer `Path`/`PathBuf` for filesystem paths; avoid `String` for OS strings.
+- Use `OsStr`/`OsString` for platform-native strings when interacting with OS APIs.
+- Prefer `hex`/`base64` crates over custom encoders; avoid rolling your own crypto.
+- Zeroize secrets with `zeroize` when handling sensitive data; minimize time secrets live in memory.
+- Validate external inputs; never trust file or network data without checks.
+- Use `#[serde(deny_unknown_fields)]` for config structs to avoid silent ignores.
+- Prefer `bstr`/`bytes` for binary-ish text processing where `&str` is not guaranteed valid UTF-8.
+- Avoid lossy conversions unless explicitly desired and documented.
+- Keep public re-exports (`pub use`) curated; avoid leaking internal modules.
+- Prefer `newtype` wrappers for domain-specific units and identifiers over raw integers.
+- Use `u64`/`i64` for counters and durations; avoid `usize` for persisted data.
+- Avoid floating-point for money or precise counts; use fixed-point or decimal crates.
+- Prefer `#[repr(transparent)]` for FFI newtypes; document layout guarantees.
+- Keep serialization formats versioned; support migrations or compatibility as needed.
+- For logging, avoid logging secrets and PII; consider redaction helpers.
+- Keep panic messages actionable; include invariants and context.
+- Validate `Drop` implementations are exception-safe; avoid panicking in `drop`.
+- Avoid long compile times: reduce monomorphization bloat and generic overuse.
+- Prefer `trait` objects only at crate boundaries where ABI-like stability is desired.
+- Structure workspaces with clear crate responsibilities; avoid circular dependencies.
+- Write clear commit messages and changelogs for public crates.
+- Use `cargo deny` (or similar) to check for vulnerable/outdated/licenses where applicable.
+- Prefer `rust-version` in `Cargo.toml` to declare the MSRV and test it in CI.
+- Keep `build.rs` minimal; prefer `include_str!`/`include_bytes!` over runtime file I/O when static.
+- Avoid `println!` debugging in committed code; prefer `tracing` with levels and targets.
+- Ensure examples in `examples/` build with `cargo build --examples`.
+- Add `#[cfg(windows)]`/`#[cfg(unix)]` as needed; keep platform-specific code separated.
+- Use `std::mem::take`/`std::mem::replace` to move out of fields safely.
+- Consider `#[derive(Arbitrary)]` for fuzzing; integrate `cargo fuzz` for critical parsers.
+- Prefer `serde_with` helpers for non-trivial serialization behaviors.
+- Avoid integer overflows; use checked/saturating arithmetic where correctness demands.
+- Avoid time-of-check/time-of-use races; prefer atomic operations or transactional approaches.
+- Keep public types stable; deprecate before removing, and provide migration notes.
+- Ensure licensing headers and `Cargo.toml` metadata are up to date (`license`, `repository`, `categories`).
