@@ -53,8 +53,8 @@ impl CodeGenerator {
         header.dat = header.cod + (self.instructions.len() * 5) as i32;
         header.hea = header.dat + self.data.len() as i32;
         header.stp = header.hea;
-        // Start execution at the first instruction (after the header)
-        header.cip = 0;
+        // Start execution at the beginning of the code section
+        header.cip = header.cod;
 
         // Build final bytecode
         let mut bytecode = Vec::new();

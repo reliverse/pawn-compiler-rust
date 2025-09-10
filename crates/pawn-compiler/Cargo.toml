@@ -6,10 +6,10 @@ description = "Core Pawn compiler implementation"
 
 [dependencies]
 pawn-amx = { path = "../pawn-amx" }
-thiserror = "1.0"
-anyhow = "1.0"
-log = "0.4"
-env_logger = "0.10"
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }
 nom = "7.1"
-regex = "1.10"
+regex = { workspace = true }
 indexmap = "2.0"

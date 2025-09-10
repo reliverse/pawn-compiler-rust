@@ -448,8 +448,9 @@ The Pawn compiler consists of two main components:
 - [x] Start AMX execution at header.cod (runtime fix)
 - [x] Wire CLI to library `compile()` and add minimal preprocessor (ignore `#include`)
 - [x] Parser: support `main()` single-statement body across newlines
-- [ ] Codegen: set header.cip to entry point if needed; ensure publics/natives tables minimal but valid
-- [ ] Add a tiny smoke test script to compile `hello.p` and `hello2.p`
+- [x] Codegen: set header.cip to entry point (beginning of code section)
+- [x] Add a tiny smoke test that compiles and runs a minimal `printf` program
+  - [ ] Ensure publics/natives tables minimal but valid
 - [ ] Generate identical AMX bytecode to original compiler for test cases
 - [ ] Maintain SA-MP compatibility
 - [ ] Achieve comparable or better performance than original compiler

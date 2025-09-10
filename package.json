@@ -1,16 +1,19 @@
 {
-  "name": "pawn-compiler-rust",
+  "name": "pawnrs",
   "module": "scripts/mod.ts",
   "type": "module",
   "scripts": {
-    "build": "cargo build",
+    "build": "cargo build --workspace",
     "tests": "bun scripts/commands/test-examples.ts",
     "rustpwn": "cargo run --quiet --bin pawnc --",
-    "check": "bun rustpwn --check",
-    "fix": "bun rustpwn --fix"
+    "rs:check": "bun rustpwn --check",
+    "rs:fix": "bun rustpwn --fix",
+    "check": "tsc --noEmit && bun check --write --unsafe"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.2.2",
     "@types/bun": "^1.2.21",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "ultracite": "^5.2.17"
   }
 }

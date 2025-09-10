@@ -5,6 +5,6 @@ edition = "2024"
 description = "AMX (Abstract Machine eXecutor) runtime for Pawn"
 
 [dependencies]
-thiserror = "1.0"
-anyhow = "1.0"
-log = "0.4"
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+log = { workspace = true }
